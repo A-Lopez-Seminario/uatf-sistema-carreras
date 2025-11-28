@@ -1,0 +1,70 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 1rem;">
+    <a href="{% url 'detalle_cronograma' carrera.id %}" style="text-decoration: none; color: #3498db;">← Volver al cronograma</a>
+</div>
+
+<div class="card">
+    <h2>Editar Estado de Fase</h2>
+    <p><strong>Carrera:</strong> {{ carrera.nombre }}</p>
+    <p><strong>Fase:</strong> {{ estado.fase.codigo }} - {{ estado.fase.nombre }}</p>
+    
+    <form method="post" style="margin-top: 1rem;">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+                <label><strong>Estado:</strong></label>
+                {{ form.estado }}
+            </div>
+            <div>
+                <label><strong>Medios de Verificación Esperados:</strong></label>
+                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 0.9em;">
+                    {{ estado.fase.medios_verificacion|default:"No especificado" }}
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+                <label><strong>Fecha de Inicio:</strong></label>
+                {{ form.fecha_inicio }}
+            </div>
+            <div>
+                <label><strong>Fecha de Conclusión:</strong></label>
+                {{ form.fecha_conclusion }}
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+            <label><strong>Medios de Verificación Cumplidos:</strong></label>
+            {{ form.medios_verificacion }}
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+            <label><strong>Observaciones:</strong></label>
+            {{ form.observaciones }}
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" style="background-color: #27ae60; color: white; padding: 10px 20px; 
+                   border: none; border-radius: 4px; cursor: pointer;">
+                💾 Guardar Cambios
+            </button>
+            <a href="{% url 'detalle_cronograma' carrera.id %}" 
+               style="background-color: #7f8c8d; color: white; padding: 10px 20px; 
+                      text-decoration: none; border-radius: 4px;">
+                ❌ Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card" style="background-color: #f8f9fa;">
+    <h4>📋 Información de la Fase</h4>
+    <p><strong>Descripción:</strong> {{ estado.fase.descripcion|default:"No hay descripción adicional" }}</p>
+    <p><strong>Medios de Verificación Esperados:</strong> {{ estado.fase.medios_verificacion }}</p>
+</div>
+{% endblock %}

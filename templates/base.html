@@ -1,0 +1,65 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema UATF - Seguimiento de Carreras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .nav {
+            background-color: #34495e;
+            padding: 0.5rem;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+        }
+        .card {
+            background: white;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .estado-pendiente { background-color: #ffebee; }
+        .estado-proceso { background-color: #fff3e0; }
+        .estado-completado { background-color: #e8f5e8; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Universidad Autónoma Tomás Frías</h1>
+        <p>Sistema de Seguimiento de Rediseño Curricular</p>
+    </div>
+    
+    {% if user.is_authenticated %}
+    <div class="nav">
+        <a href="{% url 'lista_carreras' %}">Lista de Carreras</a>
+        <a href="{% url 'logout' %}" style="float: right;">Cerrar Sesión</a>
+    </div>
+    {% endif %}
+    
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

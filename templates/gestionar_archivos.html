@@ -1,0 +1,114 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 1rem;">
+    <a href="{% url 'detalle_cronograma' carrera.id %}" style="text-decoration: none; color: #3498db;">← Volver al cronograma</a>
+</div>
+
+<div class="card">
+    <h2>📎 Gestión de Archivos - Comisión Académica (CA)</h2>
+    <p><strong>Carrera:</strong> {{ carrera.nombre }}</p>
+    <p><strong>Fase:</strong> {{ estado.fase.codigo }} - {{ estado.fase.nombre }}</p>
+    
+    <!-- Formulario para subir archivos -->
+    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 5px; margin-bottom: 2rem;">
+        <h4>📤 Subir Nuevo Archivo</h4>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label><strong>Archivo:</strong></label>
+                    {{ form.archivo }}
+                    <small style="color: #7f8c8d;">Formatos permitidos: PDF, Word, JPG, PNG (Máx. 10MB)</small>
+                </div>
+                <div>
+                    <label><strong>Tipo de Archivo:</strong></label>
+                    {{ form.tipo }}
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label><strong>Nombre del Archivo:</strong></label>
+                {{ form.nombre }}
+                <small style="color: #7f8c8d;">Ej: Acta CA - Aprobación Curricular</small>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label><strong>Descripción:</strong></label>
+                {{ form.descripcion }}
+            </div>
+            
+            <button type="submit" style="background-color: #3498db; color: white; padding: 10px 20px; 
+                   border: none; border-radius: 4px; cursor: pointer;">
+                📎 Subir Archivo
+            </button>
+        </form>
+    </div>
+    
+    <!-- Lista de archivos existentes -->
+    <h4>📁 Archivos Subidos</h4>
+    {% if archivos %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #34495e; color: white;">
+                    <th style="padding: 0.75rem; text-align: left;">Nombre</th>
+                    <th style="padding: 0.75rem; text-align: left;">Tipo</th>
+                    <th style="padding: 0.75rem; text-align: left;">Descripción</th>
+                    <th style="padding: 0.75rem; text-align: left;">Subido por</th>
+                    <th style="padding: 0.75rem; text-align: left;">Fecha</th>
+                    <th style="padding: 0.75rem; text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for archivo in archivos %}
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 0.75rem;">
+                        <strong>{{ archivo.nombre }}</strong><br>
+                        <small style="color: #7f8c8d;">{{ archivo.nombre_archivo }}</small>
+                    </td>
+                    <td style="padding: 0.75rem;">
+                        <span style="background-color: #ecf0f1; padding: 3px 8px; border-radius: 12px; font-size: 0.8em;">
+                            {{ archivo.get_tipo_display }}
+                        </span>
+                    </td>
+                    <td style="padding: 0.75rem;">{{ archivo.descripcion|default:"-" }}</td>
+                    <td style="padding: 0.75rem;">{{ archivo.subido_por.username }}</td>
+                    <td style="padding: 0.75rem;">{{ archivo.fecha_subida|date:"d/m/Y H:i" }}</td>
+                    <td style="padding: 0.75rem; text-align: center;">
+                        <div style="display: flex; gap: 5px; justify-content: center;">
+                            <a href="{% url 'descargar_archivo' archivo.id %}" 
+                               style="background-color: #27ae60; color: white; padding: 5px 10px; 
+                                      text-decoration: none; border-radius: 3px; font-size: 0.8em;">
+                                📥 Descargar
+                            </a>
+                            <a href="{% url 'eliminar_archivo' archivo.id %}" 
+                               onclick="return confirm('¿Está seguro de eliminar este archivo?')"
+                               style="background-color: #e74c3c; color: white; padding: 5px 10px; 
+                                      text-decoration: none; border-radius: 3px; font-size: 0.8em;">
+                                🗑️ Eliminar
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 2rem; background-color: #f8f9fa; border-radius: 5px;">
+        <p style="color: #7f8c8d;">No hay archivos subidos para esta fase.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Información de la fase -->
+<div class="card" style="background-color: #e8f4fd;">
+    <h4>ℹ️ Información de la Fase CA</h4>
+    <p><strong>Descripción:</strong> {{ estado.fase.descripcion|default:"Comisión Académica - Revisión y aprobación del rediseño curricular" }}</p>
+    <p><strong>Medios de Verificación Esperados:</strong> {{ estado.fase.medios_verificacion }}</p>
+    <p><strong>Archivos Recomendados:</strong> Actas de reunión, resoluciones, documentos de aprobación, informes técnicos.</p>
+</div>
+{% endblock %}

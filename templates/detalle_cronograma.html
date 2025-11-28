@@ -1,0 +1,166 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+    <a href="{% url 'lista_carreras' %}" style="text-decoration: none; color: #3498db;">← Volver a la lista</a>
+    
+    <!-- Botones de Reporte -->
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'reporte_pdf' carrera.id %}" 
+           style="background-color: #e74c3c; color: white; padding: 8px 15px; 
+                  text-decoration: none; border-radius: 4px; font-size: 0.9em;">
+            📊 Descargar PDF
+        </a>
+        <a href="{% url 'reporte_excel' carrera.id %}" 
+           style="background-color: #27ae60; color: white; padding: 8px 15px; 
+                  text-decoration: none; border-radius: 4px; font-size: 0.9em;">
+            📈 Descargar Excel
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>{{ carrera.nombre }}</h2>
+    <p><strong>Facultad:</strong> {{ carrera.facultad.nombre }}</p>
+    <p><strong>Sede:</strong> {{ carrera.sede.nombre }}</p>
+    <p><strong>Grado Académico:</strong> {{ carrera.get_grado_academico_display }}</p>
+</div>
+
+<!-- Barra de Progreso -->
+<div class="card">
+    <h3>Progreso General del Rediseño Curricular</h3>
+    <div style="background-color: #ecf0f1; border-radius: 10px; height: 20px; margin: 10px 0;">
+        <div style="background-color: #27ae60; height: 100%; border-radius: 10px; width: {{ progreso_porcentaje }}%; 
+                    transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
+            {{ progreso_porcentaje }}%
+        </div>
+    </div>
+    <div style="text-align: center; color: #7f8c8d;">
+        {{ fases_completadas }} de {{ total_fases }} fases completadas
+    </div>
+</div>
+
+<div class="card">
+    <h3>Cronograma de Rediseño Curricular</h3>
+    
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #34495e; color: white;">
+                <th style="padding: 0.75rem; text-align: left; width: 5%;">No.</th>
+                <th style="padding: 0.75rem; text-align: left; width: 30%;">Fases/Actividades</th>
+                <th style="padding: 0.75rem; text-align: center; width: 15%;">Fechas</th>
+                <th style="padding: 0.75rem; text-align: left; width: 25%;">Medios de verificación</th>
+                <th style="padding: 0.75rem; text-align: center; width: 15%;">Estado</th>
+                <th style="padding: 0.75rem; text-align: center; width: 10%;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estado in estados %}
+            <tr class="estado-{{ estado.estado }}" style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 0.75rem; text-align: center; font-weight: bold;">
+                    {{ forloop.counter }}
+                </td>
+                <td style="padding: 0.75rem;">
+                    <strong style="color: #2c3e50;">{{ estado.fase.codigo }}</strong><br>
+                    {{ estado.fase.nombre }}
+                </td>
+                <td style="padding: 0.75rem; text-align: center;">
+                    {% if estado.fecha_inicio %}
+                        <strong>Inicio:</strong><br>
+                        {{ estado.fecha_inicio|date:"d/m/Y" }}<br>
+                    {% endif %}
+                    {% if estado.fecha_conclusion %}
+                        <strong>Conclusión:</strong><br>
+                        {{ estado.fecha_conclusion|date:"d/m/Y" }}
+                    {% endif %}
+                </td>
+                <td style="padding: 0.75rem;">
+                    <div style="font-size: 0.9em;">
+                        <strong>Esperados:</strong><br>
+                        {{ estado.fase.medios_verificacion|default:"-" }}<br>
+                        {% if estado.medios_verificacion %}
+                        <strong style="color: #27ae60;">Cumplidos:</strong><br>
+                        {{ estado.medios_verificacion }}
+                        {% endif %}
+                    </div>
+                </td>
+                <td style="padding: 0.75rem; text-align: center;">
+                    <span class="badge-estado badge-{{ estado.estado }}">
+                        {{ estado.get_estado_display }}
+                    </span>
+                    {% if estado.ultimo_editor %}
+                    <div style="font-size: 0.8em; color: #7f8c8d; margin-top: 5px;">
+                        Editado por: {{ estado.ultimo_editor.username }}<br>
+                        {{ estado.fecha_actualizacion|date:"d/m/Y H:i" }}
+                    </div>
+                    {% endif %}
+                </td>
+                <td style="padding: 0.75rem; text-align: center;">
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <a href="{% url 'editar_estado' estado.id %}" 
+                           style="background-color: #3498db; color: white; padding: 5px 10px; 
+                                  text-decoration: none; border-radius: 3px; font-size: 0.8em;">
+                            ✏️ Editar
+                        </a>
+                        
+                        <!-- Botón especial para CA para gestionar archivos -->
+                        {% if estado.fase.codigo == 'CA' %}
+                        <a href="{% url 'gestionar_archivos' estado.id %}" 
+                           style="background-color: #9b59b6; color: white; padding: 5px 10px; 
+                                  text-decoration: none; border-radius: 3px; font-size: 0.8em;">
+                            📎 Archivos
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Indicador de archivos para CA -->
+                    {% if estado.fase.codigo == 'CA' and estado.tiene_archivos %}
+                    <div style="margin-top: 5px;">
+                        <span style="background-color: #27ae60; color: white; padding: 2px 6px; 
+                              border-radius: 10px; font-size: 0.7em;">
+                            📎 {{ estado.archivos.count }} archivo(s)
+                        </span>
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+.badge-estado {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.badge-pendiente {
+    background-color: #ffebee;
+    color: #e74c3c;
+}
+
+.badge-en_proceso {
+    background-color: #fff3e0;
+    color: #f39c12;
+}
+
+.badge-completado {
+    background-color: #e8f5e8;
+    color: #27ae60;
+}
+
+.estado-pendiente { 
+    background-color: #ffebee; 
+}
+.estado-en_proceso { 
+    background-color: #fff3e0; 
+}
+.estado-completado { 
+    background-color: #e8f5e8; 
+}
+</style>
+{% endblock %}

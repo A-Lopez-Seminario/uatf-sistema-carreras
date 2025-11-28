@@ -1,0 +1,31 @@
+<!-- templates/login.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 2rem auto;">
+    <div class="card">
+        <h2 style="text-align: center;">Iniciar Sesión</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div style="color: red; margin: 1rem 0;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin: 1rem 0;">
+                <label>Usuario:</label>
+                <input type="text" name="username" required style="width: 95%; padding: 0.4rem; margin-top: 0.4rem;">
+            </div>
+            <div style="margin: 1rem 0;">
+                <label>Contraseña:</label>
+                <input type="password" name="password" required style="width: 95%; padding: 0.5rem; margin-top: 0.5rem;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 0.75rem; background-color: #2c3e50; color: white; border: none; border-radius: 4px;">
+                Ingresar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

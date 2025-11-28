@@ -1,0 +1,63 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Oferta Académica UATF 2025 - Todas las Sedes</h2>
+
+{% for sede, facultades in carreras_por_sede.items %}
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 style="background-color: #2c3e50; color: white; padding: 1rem; margin: -1rem -1rem 1rem -1rem;">
+        🏛️ SEDE: {{ sede.nombre }}
+    </h2>
+    
+    {% for facultad_nombre, carreras in facultades.items %}
+    <div style="margin-bottom: 1.5rem;">
+        <h3 style="color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">
+            {{ facultad_nombre }}
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 0.5rem;">
+            {% for carrera in carreras %}
+            <div style="padding: 0.75rem; background-color: #f8f9fa; border-radius: 4px; border-left: 4px solid #3498db;">
+                <a href="{% url 'detalle_cronograma' carrera.id %}" 
+                   style="text-decoration: none; color: #2c3e50; display: block;">
+                    <strong>{{ carrera.nombre }}</strong>
+                    <div style="font-size: 0.9em; color: #7f8c8d; margin-top: 0.25rem;">
+                        {% if carrera.grado_academico == 'licenciatura' %}
+                            🎓 Licenciatura
+                        {% elif carrera.grado_academico == 'tecnico_superior' %}
+                            📊 Técnico Superior
+                        {% else %}
+                            🔧 Técnico Medio
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+<div style="text-align: center; margin-top: 2rem; padding: 1rem; background-color: #ecf0f1; border-radius: 5px;">
+    <h3>Resumen por Sede</h3>
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem;">
+        {% for sede, facultades in carreras_por_sede.items %}
+        <div style="text-align: center;">
+            <strong>{{ sede.nombre }}</strong><br>
+            <span style="color: #27ae60;">
+                {% with total=0 %}
+                    {% for facultad_nombre, carreras in facultades.items %}
+                        {% for carrera in carreras %}
+                            {% with total=total|add:1 %}{% endwith %}
+                        {% endfor %}
+                    {% endfor %}
+                    {{ facultades.values|length }} Facultades
+                {% endwith %}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
