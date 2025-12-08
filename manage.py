@@ -8,6 +8,9 @@ def main():
     """Run administrative tasks."""
     # Cargar variables de entorno
     load_dotenv()
+
+    # Forzar entorno de desarrollo
+    os.environ['DEVELOPMENT'] = 'True'
     
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'uatf_sistema.settings')
     try:

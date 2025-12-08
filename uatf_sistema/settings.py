@@ -12,7 +12,7 @@ except ImportError:
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-clave-temporal-cambiar-en-produccion')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.railway.app,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.onrender.com,localhost,127.0.0.1').split(',')
 
 # Application definition
 INSTALLED_APPS = [
