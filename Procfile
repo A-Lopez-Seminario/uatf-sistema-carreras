@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn uatf_sistema.wsgi:application --bind 0.0.0.0:$PORT
+web: gunicorn uatf_sistema.wsgi:application --bind 0.0.0.0:$PORT
