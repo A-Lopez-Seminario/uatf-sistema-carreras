@@ -91,6 +91,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Añadir esto NUEVO (autenticación)
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Este es el IMPORTANTE
+]
+
 # Internationalization
 LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'America/La_Paz'

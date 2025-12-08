@@ -1,31 +1,49 @@
-<!-- templates/login.html -->
 {% extends 'base.html' %}
 
 {% block content %}
 <div style="max-width: 400px; margin: 2rem auto;">
     <div class="card">
-        <h2 style="text-align: center;">Iniciar Sesión</h2>
+        <h2 style="text-align: center;">🔐 Iniciar Sesión - Sistema UATF</h2>
         
         {% if messages %}
             {% for message in messages %}
-                <div style="color: red; margin: 1rem 0;">{{ message }}</div>
+                <div style="background-color: #ffebee; color: #c62828; padding: 10px; 
+                          border-radius: 4px; margin: 1rem 0; border-left: 4px solid #c62828;">
+                    {{ message }}
+                </div>
             {% endfor %}
         {% endif %}
         
         <form method="post">
             {% csrf_token %}
             <div style="margin: 1rem 0;">
-                <label>Usuario:</label>
-                <input type="text" name="username" required style="width: 95%; padding: 0.4rem; margin-top: 0.4rem;">
+                <label><strong>👤 Usuario:</strong></label>
+                <input type="text" name="username" required 
+                       style="width: 100%; padding: 12px; margin-top: 8px; 
+                              border: 2px solid #ddd; border-radius: 6px;
+                              font-size: 16px;"
+                       placeholder="Ingresa tu usuario">
             </div>
-            <div style="margin: 1rem 0;">
-                <label>Contraseña:</label>
-                <input type="password" name="password" required style="width: 95%; padding: 0.5rem; margin-top: 0.5rem;">
+            <div style="margin: 1.5rem 0;">
+                <label><strong>🔒 Contraseña:</strong></label>
+                <input type="password" name="password" required 
+                       style="width: 100%; padding: 12px; margin-top: 8px;
+                              border: 2px solid #ddd; border-radius: 6px;
+                              font-size: 16px;"
+                       placeholder="Ingresa tu contraseña">
             </div>
-            <button type="submit" style="width: 100%; padding: 0.75rem; background-color: #2c3e50; color: white; border: none; border-radius: 4px;">
-                Ingresar
+            <button type="submit" 
+                    style="width: 100%; padding: 14px; background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); 
+                           color: white; border: none; border-radius: 6px; font-size: 16px; 
+                           font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                🚀 Ingresar al Sistema
             </button>
         </form>
+        
+        <div style="text-align: center; margin-top: 1.5rem; color: #7f8c8d; font-size: 0.9em;">
+            <p>Sistema de Seguimiento de Rediseño Curricular UATF</p>
+            <p>Contacto: departamento.gestion@uatf.edu.bo</p>
+        </div>
     </div>
 </div>
 {% endblock %}
